@@ -1,0 +1,7 @@
+{
+    "author": "V-Warden Community",
+    "install_msg": "Vielen Dank für die Installation von V-Warden! Besuche https://discord.gg/MVNZR73Ghf für Support.",
+    "short": "V-Warden Schutzsystem für Discord Server",
+    "description": "Ein mächtiges Tool zum Schutz deines Servers vor bekannten Cheatern, Leaks und anderen Bedrohungen. Basierend auf dem V-Warden Discord Bot Projekt.",
+    "end_user_data_statement": "Dieser Cog speichert Konfigurationsdaten für deinen Server. Für volle Funktionalität wird eine Verbindung zur V-Warden Datenbank benötigt."
+}
