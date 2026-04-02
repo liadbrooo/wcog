@@ -1,8 +1,12 @@
-"""V-Warden RedBot Cog Package"""
-from .vwarden import VWarden
+from .vwarden import VVardenBridge
+
+__red_end_user_data_statement__ = (
+    "Dieser Cog speichert Konfigurationseinstellungen pro Server (VVarden-Bot-ID, Log-Kanal, Bestrafungsart). "
+    "Der Cog selbst speichert keine persönlichen Daten von Benutzern dauerhaft. "
+    "Bei der Prüfung wird nur der Benutzername temporär an den VVarden-Bot gesendet."
+)
 
 async def setup(bot):
-    """Lädt den V-Warden Cog."""
-    from .vwarden import VWarden
-    cog = VWarden()
+    """Setup-Funktion für RedBot."""
+    cog = VVardenBridge(bot)
     await bot.add_cog(cog)

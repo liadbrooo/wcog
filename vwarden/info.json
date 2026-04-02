@@ -1,7 +1,10 @@
 {
-    "author": ["V-Warden Community", "Vampire#8144"],
-    "install_msg": "Vielen Dank für die Installation von V-Warden! Besuche https://discord.gg/MVNZR73Ghf für Support.",
-    "short": "Schutz vor Cheatern und Leaks",
-    "description": "Ein mächtiges Tool zum Schutz deines Servers vor bekannten Cheatern, Leaks und anderen Bedrohungen aus der FiveM-Community. Alle Befehle auf Deutsch verfügbar.",
-    "end_user_data_statement": "Dieser Cog speichert Konfigurationsdaten für deinen Server (Log-Kanal, Bestrafungs-Einstellungen). Für volle Funktionalität wird eine Verbindung zur V-Warden API benötigt."
+  "author": "Vampire#8144 (angepasst für RedBot als Bridge-Lösung)",
+  "install_msg": "✅ VVarden Bridge wurde erfolgreich installiert!\n\nWICHTIG: Der VVarden-Bot muss auf deinem Server sein!\n\nEinrichtung:\n1. [p]vwarden setvvid <ID> - ID des VVarden-Bots\n2. [p]vwarden logchannel #kanal - Kanal für Checks\n3. [p]vwarden einrichten - Schutz aktivieren\n\nKeine API-Keys oder Datenbank erforderlich!",
+  "short": "Schutz vor Nutzern aus bekannten schlechten Discord-Servern",
+  "description": "VVarden Bridge interagiert mit dem VVarden-Bot auf deinem Server, um gebannte Nutzer zu erkennen und automatisch zu bestrafen. Keine API-Keys oder eigene Datenbank erforderlich!",
+  "tags": ["security", "moderation", "anti-nuke", "bridge", "vvarden"],
+  "requirements": [],
+  "min_bot_version": "3.4.0",
+  "hidden": false
 }
