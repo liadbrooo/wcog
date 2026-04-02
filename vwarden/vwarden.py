@@ -118,7 +118,7 @@ class VWarden(commands.Cog):
 
         api_key = await self.get_api_key()
         if not api_key:
-            log.warning("Kein API-Key konfiguriert!")
+            log.warning("Kein API-Key konfiguriert! Bitte setze einen API-Key mit !vwarden apikey <KEY>")
             return None
 
         api_url = await self.config.api_url()
@@ -140,6 +140,9 @@ class VWarden(commands.Cog):
                     return data
                 elif resp.status == 404:
                     log.debug(f"User {user_id} nicht in Datenbank gefunden")
+                    return None
+                elif resp.status == 401:
+                    log.error("Ungültiger API-Key! Bitte überprüfe deinen Key.")
                     return None
                 else:
                     log.error(f"API Fehler: {resp.status}")
@@ -328,17 +331,25 @@ class VWarden(commands.Cog):
 
         enabled = await self.config.guild(ctx.guild).enabled()
         
-        await ctx.trigger_typing()
+        await ctx.typing()
         
         user_data = await self.check_user(user.id)
 
         if user_data is None:
-            embed = discord.Embed(
-                title="🔍 Benutzerüberprüfung",
-                description=f"**{user}** wurde **nicht** in der V-Warden Datenbank gefunden.",
-                color=COLOURS["GREEN"]
-            )
-            embed.add_field(name="Status", value="✅ Sauber", inline=False)
+            api_key = await self.get_api_key()
+            if not api_key:
+                embed = discord.Embed(
+                    title="🔍 Benutzerüberprüfung",
+                    description="⚠️ **Kein API-Key konfiguriert!**\n\nDer Bot-Besitzer muss zuerst einen API-Key setzen:\n`!vwarden apikey <DEIN_KEY>`",
+                    color=COLOURS["YELLOW"]
+                )
+            else:
+                embed = discord.Embed(
+                    title="🔍 Benutzerüberprüfung",
+                    description=f"**{user}** wurde **nicht** in der V-Warden Datenbank gefunden.",
+                    color=COLOURS["GREEN"]
+                )
+                embed.add_field(name="Status", value="✅ Sauber", inline=False)
             embed.set_thumbnail(url=user.display_avatar.url)
             embed.set_footer(text="V-Warden Protection System")
             await ctx.send(embed=embed)
@@ -385,6 +396,11 @@ class VWarden(commands.Cog):
             await ctx.send("❌ V-Warden ist für diesen Server nicht aktiviert.")
             return
 
+        api_key = await self.get_api_key()
+        if not api_key:
+            await ctx.send("⚠️ **Kein API-Key konfiguriert!**\nDer Bot-Besitzer muss zuerst einen API-Key setzen:\n`!vwarden apikey <DEIN_KEY>`")
+            return
+
         await ctx.send("🔄 Starte Server-Scan... Dies kann einige Zeit dauern.")
         
         members = ctx.guild.members
@@ -399,7 +415,7 @@ class VWarden(commands.Cog):
             if any(role.id in ignored_roles for role in member.roles):
                 continue
 
-            await ctx.trigger_typing()
+            await ctx.typing()
             
             user_data = await self.check_user(member.id)
 
