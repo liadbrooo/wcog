@@ -740,6 +740,21 @@ class VWarden(commands.Cog):
         )
         await ctx.send(embed=embed)
 
+    @vwarden_group.command(name="setglobal", aliases=["globalscan", "scanall"])
+    @checks.admin_or_permissions(administrator=True)
+    async def set_global_scan(self, ctx: commands.Context, enabled: bool):
+        """
+        Aktiviert/Deaktiviert den globalen Scan aller Mitglieder beim Beitritt.
+        Wenn aktiviert, werden alle neuen Mitglieder automatisch überprüft.
+        """
+        await self.config.guild(ctx.guild).global_scan.set(enabled)
+        
+        embed = discord.Embed(
+            description=f"{'✅' if enabled else '❌'} Globaler Scan wurde **{'aktiviert' if enabled else 'deaktiviert'}**.",
+            color=COLOURS["GREEN"] if enabled else COLOURS["RED"]
+        )
+        await ctx.send(embed=embed)
+
     @vwarden_group.command(name="badservers", aliases=["schlechteserver", "badlist"])
     async def badservers(self, ctx: commands.Context):
         """Zeigt eine Liste aller schlechten Server."""
@@ -871,6 +886,36 @@ class VWarden(commands.Cog):
         )
         
         embed.set_footer(text=f"V-Warden Cog für RedBot")
+        await ctx.send(embed=embed)
+
+    @vwarden_group.group(name="apikey", aliases=["apikeysetzen"], invoke_without_command=True)
+    @checks.is_owner()
+    async def apikey_group(self, ctx: commands.Context):
+        """Verwaltet den API-Key für V-Warden (Owner-only)."""
+        await ctx.send_help(ctx.command)
+
+    @apikey_group.command(name="set", aliases=["setzen"])
+    @checks.is_owner()
+    async def apikey_set(self, ctx: commands.Context, key: str):
+        """Setzt den API-Key für die V-Warden API."""
+        await self.config.api_key.set(key)
+        
+        embed = discord.Embed(
+            description="✅ API-Key wurde erfolgreich gesetzt.",
+            color=COLOURS["GREEN"]
+        )
+        await ctx.send(embed=embed)
+
+    @apikey_group.command(name="remove", aliases=["entfernen", "delete", "löschen"])
+    @checks.is_owner()
+    async def apikey_remove(self, ctx: commands.Context):
+        """Entfernt den gespeicherten API-Key."""
+        await self.config.api_key.set(None)
+        
+        embed = discord.Embed(
+            description="✅ API-Key wurde entfernt.",
+            color=COLOURS["GREEN"]
+        )
         await ctx.send(embed=embed)
 
     @vwarden_group.command(name="about", aliases=["info", "über"])
@@ -1052,6 +1097,10 @@ deinen Discord-Server zu betreten.
         if log_channel:
             await self.config.guild(guild).log_channel.set(log_channel.id)
             
+            # Hole Prefix vom Bot
+            prefixes = await self.bot.get_prefix(self.bot.get_message(log_channel.id) if hasattr(self.bot, 'get_message') else None) if False else ["?"]
+            prefix = prefixes[0] if isinstance(prefixes, list) and prefixes else "?"
+            
             embed = discord.Embed(
                 title="🛡️ V-Warden installiert",
                 description="Danke dass du V-Warden installiert hast!\n\nUm den Bot zu konfigurieren, verwende:",
@@ -1059,7 +1108,7 @@ deinen Discord-Server zu betreten.
             )
             embed.add_field(
                 name="Erste Schritte",
-                value=f"`{ctx.prefix}vwarden enable` - Aktiviere den Bot\n`{ctx.prefix}vwarden config` - Zeige Konfiguration\n`{ctx.prefix}vwarden help` - Hilfe anzeigen",
+                value=f"`{prefix}vwarden enable` - Aktiviere den Bot\n`{prefix}vwarden config` - Zeige Konfiguration\n`{prefix}vwarden help` - Hilfe anzeigen",
                 inline=False
             )
             
