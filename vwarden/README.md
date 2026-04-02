@@ -1,91 +1,107 @@
-# V-Warden RedBot Cog
+# VVarden Bridge - RedBot Cog
 
-Ein mächtiges Tool zum Schutz deines Discord-Servers vor bekannten Cheatern, Leaks und anderen Bedrohungen aus der FiveM-Community.
+Ein RedBot-Cog, der mit dem **VVarden-Bot** auf deinem Discord-Server interagiert, um gebannte Nutzer zu erkennen und automatisch zu bestrafen.
 
-## Installation
+## ⚠️ Wichtig: Funktionsweise
 
-1. Füge das Repository zu deinem RedBot hinzu:
-   ```
-   [p]repo add vwarden https://github.com/YOUR_USERNAME/vwarden main
-   ```
+Dieser Cog benötigt **KEINE API-Keys** und **KEINE eigene Datenbank**! Stattdessen:
 
-2. Installiere den Cog:
-   ```
-   [p]cog install vwarden vwarden
-   ```
+1. Der VVarden-Bot muss sich **auf demselben Discord-Server** befinden
+2. Der Cog sendet den Check-Befehl (z.B. `!check username`) an VVarden
+3. Die Antwort von VVarden wird ausgewertet
+4. Bei einem Treffer wird der Nutzer automatisch bestraft (Ban/Kick/Warn)
 
-3. Lade den Cog:
-   ```
-   [p]load vwarden
-   ```
+## 📋 Installation
 
-## WICHTIG: API-Key einrichten
-
-Bevor du V-Warden verwenden kannst, musst du einen API-Key konfigurieren. Nur der Bot-Besitzer kann dies tun:
-
+### 1. Repo hinzufügen
 ```
-!vwarden apikey DEIN_API_KEY
+[p]repo add vwarden https://github.com/DEIN_USERNAME/vwarden.git main
 ```
 
-Du erhältst deinen API-Key von V-Warden. Besuche https://discord.gg/MVNZR73Ghf für mehr Informationen.
+### 2. Cog installieren
+```
+[p]cog install vwarden vwarden
+```
 
-## Einrichtung
+### 3. Cog laden
+```
+[p]load vwarden
+```
 
-1. Aktiviere den Bot für deinen Server:
-   ```
-   !vwarden enable
-   ```
+## ⚙️ Einrichtung
 
-2. Konfiguriere den Log-Kanal:
-   ```
-   !vwarden logchannel #channel-name
-   ```
+### Schritt 1: VVarden-Bot ID setzen
+Aktiviere in Discord den Entwicklermodus (Einstellungen → Erweitert → Entwicklermodus).
+Rechtsklick auf den VVarden-Bot → "ID kopieren".
 
-3. Überprüfe die Konfiguration:
-   ```
-   !vwarden config
-   ```
+```
+[p]vwarden setvvid 123456789012345678
+```
 
-## Befehle
+### Schritt 2: Log-Kanal festlegen
+Erstelle einen Kanal, in dem sowohl dein Bot als auch VVarden schreiben können.
 
-### Basis-Befehle
-- `!vwarden enable` - Aktiviert V-Warden für diesen Server
-- `!vwarden disable` - Deaktiviert V-Warden
-- `!vwarden logchannel` - Setzt den Log-Kanal
-- `!vwarden punishrole @Rolle` - Setzt die Strafrrolle
-- `!vwarden config` - Zeigt die aktuelle Konfiguration
+```
+[p]vwarden logchannel #kanal-name
+```
 
-### Überprüfung
-- `!vwarden check @user` - Überprüft einen Benutzer in der Datenbank
-- `!vwarden scan` - Scannt alle Mitglieder des Servers (nur Admins)
+### Schritt 3: Schutz aktivieren
+```
+[p]vwarden einrichten
+```
 
-### Bestrafungen konfigurieren
-- `!vwarden setpunish <typ> <strafe>` - Setzt Strafe für Benutzertyp
-  - Typen: owner, supporter, leaker, cheater, other
-  - Strafen: ban, kick, role, warn, none
-- `!vwarden togglepunishments` - Aktiviert/Deaktiviert automatische Bestrafungen
+### Schritt 4: Bestrafung einstellen (optional)
+Standard ist Kick. Optionen: `ban`, `kick`, `warn`
 
-### Ignore-Listen
-- `!vwarden ignore @Rolle` oder `!vwarden ignore #Kanal` - Ignoriert Rolle/Kanal
-- `!vwarden unignore @Rolle` oder `!vwarden unignore #Kanal` - Entfernt von Ignore-Liste
+```
+[p]vwarden bestrafung ban
+```
 
-### Admin-Befehle (nur Bot-Besitzer)
-- `!vwarden apikey <KEY>` - Setzt den API-Key
-- `!vwarden apikey` - Zeigt den aktuellen API-Key (maskiert)
-- `!vwarden clearcache` - Leert den Benutzer-Cache
+## 📖 Befehle
 
-## Funktionsweise
+| Befehl | Beschreibung |
+|--------|--------------|
+| `[p]vwarden einrichten` | Aktiviert den Schutz für diesen Server |
+| `[p]vwarden deaktivieren` | Deaktiviert den Schutz |
+| `[p]vwarden setvvid <ID>` | Setzt die VVarden-Bot-ID |
+| `[p]vwarden logchannel <#kanal>` | Setzt den Kanal für Checks |
+| `[p]vwarden bestrafung <art>` | Setzt Strafe: ban, kick, warn |
+| `[p]vwarden status` | Zeigt aktuelle Konfiguration |
+| `[p]vwarden check <@user>` | Manuelles Prüfen eines Users |
+| `[p]vwarden setcmd <befehl>` | Ändert Check-Befehl (Standard: !check) |
 
-- **Automatischer Schutz**: Wenn ein neuer Benutzer den Server betritt, wird er automatisch überprüft
-- **Nachrichten-Überwachung**: Auch beim Senden von Nachrichten können Benutzer geprüft werden
-- **Bestrafungen**: Automatische Bestrafung basierend auf dem Benutzertyp (Ban, Kick, Rolle, Warnung)
-- **Logging**: Alle Vorfälle werden im konfigurierten Log-Kanal dokumentiert
-- **Caching**: Ergebnisse werden gecacht um API-Aufrufe zu minimieren
+## 🔍 Automatische Funktionen
 
-## Unterstützung
+- **Join-Schutz**: Jeder neue User wird automatisch bei VVarden geprüft
+- **Automatische Bestrafung**: Bei Treffer sofort Ban/Kick/Warn
+- **Logging**: Alle Aktionen werden im Log-Kanal dokumentiert
 
-Für Support und weitere Informationen besuche: https://discord.gg/MVNZR73Ghf
+## ❗ Voraussetzungen
 
-## Original Projekt
+1. **VVarden-Bot** muss auf dem Server sein
+2. Dein Bot braucht **Nachrichten senden & lesen**-Rechte im Log-Kanal
+3. VVarden muss im Log-Kanal antworten dürfen
+4. Dein Bot braucht **Ban/Kick**-Rechte für Bestrafungen
 
-https://github.com/V-Warden/discord
+## 🔧 Fehlerbehebung
+
+**"VVarden hat nicht geantwortet"**
+- Ist der VVarden-Bot online?
+- Hat er Schreibrechte im Log-Kanal?
+- Nutzt VVarden einen anderen Check-Befehl? → `[p]vwarden setcmd`
+
+**"Konnte nicht bestrafen"**
+- Hat dein Bot Ban/Kick-Rechte?
+- Ist die eigene Rolle höher als die des Users?
+
+**"Timeout"**
+- VVarden ist vielleicht überlastet
+- Netzwerkprobleme prüfen
+
+## 📄 Lizenz
+
+Dieser Cog steht unter der gleichen Lizenz wie der originale VVarden-Bot.
+
+---
+
+**Hinweis**: Dieser Cog ist eine Bridge-Lösung und hängt von der Verfügbarkeit des VVarden-Bots ab. Für eine eigenständige Lösung müsste eine lokale Datenbank verwendet werden.
