@@ -19,7 +19,6 @@ import discord
 from redbot.core import commands, Config, checks
 from redbot.core.utils import chat_formatting as cf
 from redbot.core.utils.menus import menu, DEFAULT_CONTROLS
-from redbot.core.bot import Red
 import aiohttp
 import json
 
@@ -70,9 +69,13 @@ class VWarden(commands.Cog):
     
     Basierend auf dem V-Warden Discord Bot Projekt.
     """
+    
+    def cog_name(self):
+        """Gibt den Namen des Cogs zurück."""
+        return "VWarden"
 
-    def __init__(self, bot: Red):
-        self.bot = bot
+    def __init__(self):
+        self.bot = None  # Wird von RedBot gesetzt
         self.config = Config.get_conf(self, identifier=58294671235, force_registration=True)
 
         # Standard-Konfiguration für Gilden
@@ -1121,8 +1124,9 @@ deinen Discord-Server zu betreten.
 
 
 # Setup-Funktion für RedBot
-async def setup(bot: Red):
+async def setup(bot):
     """Lädt den V-Warden Cog."""
-    cog = VWarden(bot)
+    cog = VWarden()
     await bot.add_cog(cog)
     log.info("V-Warden Cog wurde erfolgreich geladen.")
+
